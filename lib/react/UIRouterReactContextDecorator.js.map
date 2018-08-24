@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "UIRouterReactContextDecorator.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/react-hybrid/react/UIRouterReactContextDecorator.tsx"
+  ],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;AAAA,6BAA+B;AAC/B,+DAAkE;AAElE;;;;;;;;;;;;;;;;;;;;;;;;GAwBG;AACH,SAAgB,eAAe,CAAC,SAA8D;IAC5F;QAAqB,2BAAyB;QAAvC;;QAIP,CAAC;QAHQ,wBAAM,GAAb;YACE,OAAO,oBAAC,+CAAwB,QAAE,KAAK,CAAC,aAAa,CAAC,SAAS,EAAE,IAAI,CAAC,KAAK,CAAC,CAA4B,CAAC;QAC3G,CAAC;QACH,cAAC;IAAD,CAAC,AAJM,CAAc,KAAK,CAAC,SAAS,GAIlC;AACJ,CAAC;AAND,0CAMC",
+  "sourcesContent": [
+    "import * as React from 'react';\nimport { UIRouterContextComponent } from './UIRouterReactContext';\n\n/**\n * A decorator that provides the UIRouter state context allowing\n * React components to use the @uirouter/react components such as UISref\n *\n * Example:\n *\n * import { UISref, UISrefActive, UIView } from '@uirouter/react';\n *\n * @UIRouterContext\n * class MyComponent extends React.Component<any, any> {\n *   render() {\n *     return (\n *       <UISrefActive class=\"active\">\n *         <UISref to=\".neststate\" params={{ id: this.props.someid }}>\n *           <a>Go to item {this.props.someid}</a>\n *         </UISref>\n *       </UISrefActive>\n *\n *       <UIView/>\n *     )\n *   }\n * }\n *\n * @param Component the react component to wrap\n */\nexport function UIRouterContext(Component: { new (...args: any[]): React.Component<any, any> }): any {\n  return class extends React.Component<any, any> {\n    public render() {\n      return <UIRouterContextComponent>{React.createElement(Component, this.props)}</UIRouterContextComponent>;\n    }\n  };\n}\n"
+  ]
+}
