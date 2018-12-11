@@ -45,8 +45,8 @@ var __rest =
         if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
     return t;
   };
-import { hybridModule } from '../angularjs/module';
 import * as React from 'react';
+import { hybridModule } from '../angularjs/module';
 var $injector, $rootScope, $compile;
 hybridModule.run([
   '$injector',
@@ -64,23 +64,23 @@ var AngularUIView = /** @class */ (function(_super) {
   __extends(AngularUIView, _super);
   function AngularUIView(props) {
     var _this = _super.call(this, props) || this;
-    _this.state = {
-      $scope: $rootScope.$new(),
-    };
+    _this.$scope = $rootScope.$new();
+    _this.$scope.$uiRouterReactHybridPortalView = _this.props.portalView;
     return _this;
   }
+  AngularUIView.prototype.componentWillUnmount = function() {
+    this.$scope.$destroy();
+  };
   AngularUIView.prototype.render = function() {
+    var _this = this;
     var _a = this.props,
       className = _a.className,
       restProps = __rest(_a, ['className']);
-    var props = __assign({}, restProps, { class: className, ref: this.compile.bind(this) });
+    var ref = function(htmlRef) {
+      return $compile(htmlRef)(_this.$scope);
+    };
+    var props = __assign({}, restProps, { class: className, ref: ref });
     return React.createElement('ui-view', props);
-  };
-  AngularUIView.prototype.compile = function(ref) {
-    $compile(ref)(this.state.$scope);
-  };
-  AngularUIView.prototype.componentWillUnmount = function() {
-    this.state.$scope.$destroy();
   };
   /** Only render once */
   AngularUIView.prototype.shouldComponentUpdate = function() {

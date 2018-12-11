@@ -70,14 +70,15 @@ var UIRouterContextComponent = /** @class */ (function(_super) {
   UIRouterContextComponent.prototype.renderChild = function(child) {
     var _this = this;
     // console.log('renderChild()', child);
+    var inherited = this.props.inherited;
     return React.createElement(UIRouterConsumer, null, function(routerFromReactContext) {
       return React.createElement(
         UIRouterProvider,
-        { value: routerFromReactContext || _this.state.router },
+        { value: (inherited && routerFromReactContext) || _this.state.router },
         React.createElement(UIViewConsumer, null, function(parentUIViewFromReactContext) {
           return React.createElement(
             UIViewProvider,
-            { value: parentUIViewFromReactContext || _this.state.parentUIViewAddress },
+            { value: (inherited && parentUIViewFromReactContext) || _this.state.parentUIViewAddress },
             child
           );
         })
@@ -97,6 +98,7 @@ var UIRouterContextComponent = /** @class */ (function(_super) {
   };
   UIRouterContextComponent.defaultProps = {
     parentContextLevel: '0',
+    inherited: true,
   };
   return UIRouterContextComponent;
 })(React.Component);

@@ -12,22 +12,12 @@ var __assign =
       };
     return __assign.apply(this, arguments);
   };
-var __rest =
-  (this && this.__rest) ||
-  function(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === 'function')
-      for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++)
-        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
-    return t;
-  };
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { hybridModule } from './module';
-import { UIView, UIRouterConsumer, UIViewConsumer } from '@uirouter/react';
 import { filter } from '@uirouter/core';
-import { UIRouterContextComponent } from '../react/UIRouterReactContext';
+import { ReactUIView } from '../react/ReactUIView';
+import { hybridModule } from './module';
+import { debugLog } from '../debug';
 // When an angularjs `ui-view` is instantiated, also create an react-ui-view-adapter (which creates a react UIView)
 hybridModule.directive('uiView', function() {
   return {
@@ -36,7 +26,7 @@ hybridModule.directive('uiView', function() {
       var name = tAttrs.name,
         uiView = tAttrs.uiView;
       name = name || uiView || '$default';
-      // console.log('Creating react-ui-view-adapter', tElem);
+      debugLog('angularjs', 'ui-view', '?', '.compile()', 'Creating react-ui-view-adapter', tElem);
       tElem.html('<react-ui-view-adapter name="' + name + '"></react-ui-view-adapter>');
     },
   };
@@ -49,6 +39,16 @@ hybridModule.directive('reactUiViewAdapter', function() {
   return {
     restrict: 'E',
     link: function(scope, elem, attrs) {
+      var debug = function(method, message) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+          args[_i - 2] = arguments[_i];
+        }
+        return debugLog.apply(
+          void 0,
+          ['angularjs', 'react-ui-view-adapter', $id + '/' + attrs.name, method, message].concat(args)
+        );
+      };
       var el = elem[0];
       var _ref = null;
       var destroyed = false;
@@ -57,32 +57,26 @@ hybridModule.directive('reactUiViewAdapter', function() {
       attrs = filter(attrs, function(val, key) {
         return ignoredAttrKeys.indexOf(key) === -1;
       });
-      // console.log(`${$id}: linking react-ui-view-adapter into `, el, attrs)
-      var log = function(msg, UIViewRef) {
-        var id = UIViewRef && UIViewRef.state && UIViewRef.state.id;
-        var cmp = UIViewRef && UIViewRef.componentInstance;
-        console.log(msg, 'Has UIViewRef: ' + !!UIViewRef, id, cmp);
-      };
+      debug('.link()', 'linking react-ui-view-adapter into ', el, attrs);
       // The UIView ref callback, which is called after the initial render
       var ref = function(ref) {
-        if (
-          // If refs are the same - don't re-render React component.
-          (ref && _ref === ref) ||
-          // If previously there was a ref, and the new `ref` is empty - the component was unmounted.
-          // Leave the unmounted component as it was, and don't try to re-mount it.
-          (!ref && _ref)
-        ) {
+        // If refs are the same - don't re-render React component.
+        var isSameRef = ref && _ref === ref;
+        // If previously there was a ref, and the new `ref` is empty - the component was unmounted.
+        // Leave the unmounted component as it was, and don't try to re-mount it.
+        var isComponentUnmounted = !ref && _ref;
+        if (isSameRef || isComponentUnmounted) {
           return;
         }
         _ref = ref;
-        // log(`${$id}: received new React UIView ref:`, ref);
+        debug('.ref()', 'Received new React UIView ref', ref);
         // Add the $uiView data to the adapter element to provide context to child angular elements
         provideContextToAngularJSChildren();
         renderReactUIView();
       };
       // The render callback for the React UIView
       var render = function(cmp, props) {
-        // log('render', _ref);
+        debug('.render()', 'has ref: ' + !!_ref);
         provideContextToAngularJSChildren();
         // Only create the children when the _ref is ready
         return !_ref ? null : React.createElement(cmp, props);
@@ -90,7 +84,7 @@ hybridModule.directive('reactUiViewAdapter', function() {
       var provideContextToAngularJSChildren = function() {
         var $cfg = _ref && _ref.uiViewData && _ref.uiViewData.config;
         var $uiView = _ref && _ref.uiViewAddress;
-        // console.log(`${$id}: providing context to angularjs children`, el, $cfg, $uiView);
+        debug('.provideContextToAngularJSChildren', '', el, $cfg, $uiView);
         if (!$cfg || !$uiView) {
           elem.removeData('$uiView');
         } else {
@@ -98,19 +92,33 @@ hybridModule.directive('reactUiViewAdapter', function() {
         }
       };
       function renderReactUIView() {
-        // console.log(`${$id}: rendering react uiview into container`, el);
         if (destroyed) {
-          // console.error(`${$id}: react-ui-view-adapter has already been destroyed -- not rendering React UIView`);
+          debug('.renderReactUIView()', 'already destroyed -- will not render React UIView');
           return;
         }
-        var props = __assign({}, attrs, { render: render, wrap: false, refFn: ref });
-        // console.log(`${$id}: rendering ReactUIView with props`, props);
-        ReactDOM.render(React.createElement(ReactUIView, __assign({}, props)), el);
+        var childUIViewProps = __assign({}, attrs, { render: render, wrap: false, refFn: ref });
+        var portalView = scope.$uiRouterReactHybridPortalView;
+        if (portalView) {
+          debug(
+            '.renderReactUIView()',
+            "will createPortalToChildUIView({ name: '" + childUIViewProps['name'] + "' })",
+            el
+          );
+          portalView.createPortalToChildUIView($id, { childUIViewProps: childUIViewProps, portalTarget: el });
+        } else {
+          debug('.renderReactUIView()', 'ReactDOM.render(<ReactUIView name="' + childUIViewProps['name'] + '"/>)', el);
+          ReactDOM.render(React.createElement(ReactUIView, __assign({}, childUIViewProps)), el);
+        }
       }
       scope.$on('$destroy', function() {
         destroyed = true;
-        var unmounted = ReactDOM.unmountComponentAtNode(el);
-        // console.log(`${$id}: angular $destroy event -- unmountComponentAtNode(): ${unmounted}`, el);
+        var portalView = scope.$uiRouterReactHybridPortalView;
+        if (portalView) {
+          portalView.removePortalToChildUIView($id);
+        } else {
+          var unmounted = ReactDOM.unmountComponentAtNode(el);
+          debug('.$on("$destroy")', 'unmountComponentAtNode(): ' + unmounted, el);
+        }
         // Remove using jQLite element for cross-browser compatibility.
         elem.remove();
       });
@@ -118,21 +126,4 @@ hybridModule.directive('reactUiViewAdapter', function() {
     },
   };
 });
-var InternalUIView = UIView.__internalViewComponent;
-var ReactUIView = function(_a) {
-  var refFn = _a.refFn,
-    props = __rest(_a, ['refFn']);
-  return React.createElement(
-    UIRouterContextComponent,
-    { parentContextLevel: '3' },
-    React.createElement(UIRouterConsumer, null, function(router) {
-      return React.createElement(UIViewConsumer, null, function(parentUiView) {
-        return React.createElement(
-          InternalUIView,
-          __assign({}, props, { ref: refFn, parentUIView: parentUiView, router: router })
-        );
-      });
-    })
-  );
-};
 //# sourceMappingURL=ReactUIViewAdapterComponent.js.map

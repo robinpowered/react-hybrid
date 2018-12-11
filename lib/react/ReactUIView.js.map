@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "ReactUIView.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/react-hybrid/react/ReactUIView.tsx"
+  ],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;AAAA,6BAA+B;AAC/B,yCAAwF;AACxF,+DAAkE;AAClE,kCAAoC;AAEpC,IAAM,cAAc,GAAG,cAAM,CAAC,uBAAuB,CAAC;AAMzC,QAAA,WAAW,GAAG,UAAC,EAAsC;IAApC,IAAA,gBAAK,EAAE,6BAAQ;IAC3C,gBAAQ,CAAC,OAAO,EAAE,aAAa,EAAE,OAAK,KAAK,CAAC,MAAM,CAAG,EAAE,WAAW,EAAE,EAAE,CAAC,CAAC;IAExE,OAAO,CACL,oBAAC,+CAAwB,IAAC,kBAAkB,EAAC,GAAG,EAAC,SAAS,EAAE,KAAK;QAC/D,oBAAC,wBAAgB,QACd,UAAA,MAAM,IAAI,OAAA,CACT,oBAAC,sBAAc,QACZ,UAAA,YAAY,IAAI,OAAA,CACf,oBAAC,cAAc,eAAK,KAAK,IAAE,GAAG,EAAE,KAAY,EAAE,YAAY,EAAE,YAAY,EAAE,MAAM,EAAE,MAAM,IAAI,CAC7F,EAFgB,CAEhB,CACc,CAClB,EANU,CAMV,CACgB,CACM,CAC5B,CAAC;AACJ,CAAC,CAAC",
+  "sourcesContent": [
+    "import * as React from 'react';\nimport { UIRouterConsumer, UIView, UIViewConsumer, UIViewProps } from '@uirouter/react';\nimport { UIRouterContextComponent } from './UIRouterReactContext';\nimport { debugLog } from '../debug';\n\nconst InternalUIView = UIView.__internalViewComponent;\n\nexport interface IReactUIViewProps extends UIViewProps {\n  refFn: (ref: HTMLElement) => void;\n}\n\nexport const ReactUIView = ({ refFn, ...props }: IReactUIViewProps) => {\n  debugLog('react', 'ReactUIView', `?/${props['name']}`, '.render()', '');\n\n  return (\n    <UIRouterContextComponent parentContextLevel=\"3\" inherited={false}>\n      <UIRouterConsumer>\n        {router => (\n          <UIViewConsumer>\n            {parentUiView => (\n              <InternalUIView {...props} ref={refFn as any} parentUIView={parentUiView} router={router} />\n            )}\n          </UIViewConsumer>\n        )}\n      </UIRouterConsumer>\n    </UIRouterContextComponent>\n  );\n};\n"
+  ]
+}

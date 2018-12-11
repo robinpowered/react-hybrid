@@ -2,6 +2,7 @@ import { UIRouterReact } from '@uirouter/react';
 import * as React from 'react';
 export interface IUIRouterContextComponentProps {
   parentContextLevel?: string;
+  inherited?: boolean;
 }
 export interface IUIRouterContextComponentState {
   ready: boolean;
