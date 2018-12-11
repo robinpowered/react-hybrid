@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { UIView } from '@uirouter/react';
-import { AngularUIView } from './AngularUIView';
+import { debugLog } from '../debug';
+import { PortalView } from './PortalView';
+
+const realRender = UIView.prototype.render;
 
 /**
  * Monkey patches the @uirouter/react UIView such that:
@@ -18,12 +21,13 @@ import { AngularUIView } from './AngularUIView';
  *   </react-ui-view-adapter>
  * </ui-view>
  */
-const realRender = UIView.prototype.render;
 
 UIView.prototype.render = function() {
   if (this.props.wrap === false) {
+    const id = `${this.$id}/${this.props['name']}`;
+    debugLog('react', 'UIViewMonkeyPatch', id, '.render()', 'realRender.apply(this, arguments)');
     return realRender.apply(this, arguments);
   }
 
-  return <AngularUIView {...this.props} />;
+  return <PortalView {...this.props} />;
 };

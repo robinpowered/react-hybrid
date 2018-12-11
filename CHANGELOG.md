@@ -1,3 +1,68 @@
+## 0.3.9 (2018-11-15)
+[Compare `@uirouter/react-hybrid` versions 0.3.8 and 0.3.9](https://github.com/ui-router/react-hybrid/compare/0.3.8...0.3.9)
+
+### Bug Fixes
+
+* **UIVieMonkeyPatch:** Remove erroneously added <div class="UIView"> ([c189c99](https://github.com/ui-router/react-hybrid/commit/c189c99))
+
+## 0.3.8 (2018-11-15)
+[Compare `@uirouter/react-hybrid` versions 0.3.7 and 0.3.8](https://github.com/ui-router/react-hybrid/compare/0.3.7...0.3.8)
+
+### Bug Fixes
+
+* **Portal:** Support creating portals for multiple nested UIViews ([ab4edcb](https://github.com/ui-router/react-hybrid/commit/ab4edcb))
+
+
+### Features
+
+* Add debugLog mechanism ([94fe097](https://github.com/ui-router/react-hybrid/commit/94fe097))
+* Tweak debugLog output into columns ([ac0dda2](https://github.com/ui-router/react-hybrid/commit/ac0dda2))
+
+## 0.3.7 (2018-11-08)
+[Compare `@uirouter/react-hybrid` versions 0.3.6 and 0.3.7](https://github.com/ui-router/react-hybrid/compare/0.3.6...0.3.7)
+
+### Bug Fixes
+
+* **ReactUIViewAdapter:** Turn off debug statement (whops) ([cb8b64d](https://github.com/ui-router/react-hybrid/commit/cb8b64d))
+
+## 0.3.6 (2018-11-08)
+[Compare `@uirouter/react-hybrid` versions 0.3.5 and 0.3.6](https://github.com/ui-router/react-hybrid/compare/0.3.5...0.3.6)
+
+### Features
+
+* **UIView:** Use React Portals: Allows React Context to propagate through UIViews. All UIViews now render using the same React instance.  ([5f76b16ff670a3e325909440cf33b3e56829880d](https://github.com/ui-router/react-hybrid/commit/5f76b16ff670a3e325909440cf33b3e56829880d)) [#138](https://github.com/ui-router/react-hybrid/pull/138)
+
+## 0.3.5 (2018-10-24)
+[Compare `@uirouter/react-hybrid` versions 0.3.4 and 0.3.5](https://github.com/ui-router/react-hybrid/compare/0.3.4...0.3.5)
+
+### Bug Fixes
+
+Big thanks to [@jutaz](https://github.com/jutaz)!
+
+* Do not re-render a component that has been unmounted ([2c41f98d0589541067fd8b38f0d4e0c603d15984](https://github.com/ui-router/react-hybrid/commit/2c41f98d0589541067fd8b38f0d4e0c603d15984)) [#134](https://github.com/ui-router/react-hybrid/pull/134)
+* Use JQLite to remove an element for IE11 compat ([2f1c6bc9731a2287569a865107563cead9f6bf27](https://github.com/ui-router/react-hybrid/commit/2f1c6bc9731a2287569a865107563cead9f6bf27)) [#92](https://github.com/ui-router/react-hybrid/pull/92)
+* Use JQLite to remove an element for IE11 compat ([2f1c6bc9731a2287569a865107563cead9f6bf27](https://github.com/ui-router/react-hybrid/commit/2f1c6bc9731a2287569a865107563cead9f6bf27)) [#92](https://github.com/ui-router/react-hybrid/pull/92)
+
+## 0.3.4 (2018-08-12)
+[Compare `@uirouter/react-hybrid` versions 0.3.3 and 0.3.4](https://github.com/ui-router/react-hybrid/compare/0.3.3...0.3.4)
+
+
+### Updated `@uirouter/core` from 5.0.20 to 5.0.21
+[Compare `@uirouter/core` versions 5.0.20 and 5.0.21](https://github.com/ui-router/core/compare/5.0.20...5.0.21)
+
+### Bug Fixes
+
+* **dynamic:** Use 'find' from common.ts instead of Array.prototype.find ([66a3244](https://github.com/ui-router/core/commit/66a3244)), closes [#215](https://github.com/ui-router/core/issues/215)
+* **url:** When using html5Mode and no <base> tag is present, default to '/' ([23742e3](https://github.com/ui-router/core/commit/23742e3)), closes [#223](https://github.com/ui-router/core/issues/223)
+
+
+### Updated `@uirouter/react` from 0.8.5 to 0.8.7
+[Compare `@uirouter/react` versions 0.8.5 and 0.8.7](https://github.com/ui-router/react/compare/0.8.5...0.8.7)
+
+
+### Updated `@uirouter/angularjs` from 1.0.19 to 1.0.20
+[Compare `@uirouter/angularjs` versions 1.0.19 and 1.0.20](https://github.com/angular-ui/ui-router/compare/1.0.19...1.0.20)
+
 ## 0.3.3 (2018-08-09)
 [Compare `@uirouter/react-hybrid` versions 0.3.2 and 0.3.3](https://github.com/ui-router/react-hybrid/compare/0.3.2...0.3.3)
 
