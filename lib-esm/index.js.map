@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/react-hybrid/index.ts"
+  ],
+  "names": [],
+  "mappings": "AAAA,OAAO,qBAAqB,CAAC;AAC7B,OAAO,iBAAiB,CAAC;AAEzB,OAAO,+BAA+B,CAAC;AACvC,OAAO,yCAAyC,CAAC;AACjD,OAAO,2BAA2B,CAAC;AAEnC,cAAc,oBAAoB,CAAC;AACnC,cAAc,8BAA8B,CAAC;AAC7C,cAAc,uCAAuC,CAAC",
+  "sourcesContent": [
+    "import '@uirouter/angularjs';\nimport '@uirouter/react';\n\nimport './decorateUIRouterViewConfigs';\nimport './angularjs/ReactUIViewAdapterComponent';\nimport './react/UIViewMonkeyPatch';\n\nexport * from './angularjs/module';\nexport * from './react/UIRouterReactContext';\nexport * from './react/UIRouterReactContextDecorator';\n"
+  ]
+}

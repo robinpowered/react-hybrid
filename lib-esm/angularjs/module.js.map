@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "module.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/react-hybrid/angularjs/module.ts"
+  ],
+  "names": [],
+  "mappings": "AAAA,OAAO,KAAK,OAAO,MAAM,SAAS,CAAC;AACnC,MAAM,CAAC,IAAM,sBAAsB,GAAG,wBAAwB,CAAC;AAC/D,MAAM,CAAC,IAAM,YAAY,GAAG,OAAO,CAAC,MAAM,CAAC,sBAAsB,EAAE,CAAC,WAAW,CAAC,CAAC,CAAC;AAClF,eAAe,sBAAsB,CAAC",
+  "sourcesContent": [
+    "import * as angular from 'angular';\nexport const UI_ROUTER_REACT_HYBRID = 'ui.router.react.hybrid';\nexport const hybridModule = angular.module(UI_ROUTER_REACT_HYBRID, ['ui.router']);\nexport default UI_ROUTER_REACT_HYBRID;\n"
+  ]
+}

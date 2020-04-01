@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "file": "debug.js",
+  "sourceRoot": "",
+  "sources": [
+    "@uirouter/react-hybrid/debug.ts"
+  ],
+  "names": [],
+  "mappings": ";;;;;;;;;AAAA,uCAA2C;AAE9B,QAAA,QAAQ,GAAG,UACtB,cAAqC,EACrC,SAAiB,EACjB,EAAU,EACV,MAAc,EACd,OAAe;IACf,cAAO;SAAP,UAAO,EAAP,qBAAO,EAAP,IAAO;QAAP,6BAAO;;IAEP,IAAI,MAAM,IAAI,MAAM,CAAC,kBAAkB,CAAC,KAAK,IAAI;QAAE,OAAO;IAC1D,OAAO,CAAC,GAAG,OAAX,OAAO,kBACF,gBAAS,CAAC,EAAE,EAAE,cAAc,CAAC,SAAI,gBAAS,CAAC,EAAE,EAAK,SAAS,SAAI,EAAE,MAAG,CAAC,SAAI,gBAAS,CACnF,EAAE,EACC,MAAM,MAAG,CACb,SAAI,OAAS,GACX,IAAI,GACP;AACJ,CAAC,CAAC",
+  "sourcesContent": [
+    "import { padString } from '@uirouter/core';\n\nexport const debugLog = (\n  angularOrReact: 'angularjs' | 'react',\n  component: string,\n  id: string,\n  method: string,\n  message: string,\n  ...args\n) => {\n  if (window && window['debugReactHybrid'] !== true) return;\n  console.log(\n    `${padString(12, angularOrReact)} ${padString(40, `${component}[${id}]`)} ${padString(\n      35,\n      `${method}:`\n    )} ${message}`,\n    ...args\n  );\n};\n"
+  ]
+}
