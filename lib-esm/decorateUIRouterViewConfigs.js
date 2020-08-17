@@ -1,29 +1,3 @@
-var __extends =
-  (this && this.__extends) ||
-  (function() {
-    var extendStatics = function(d, b) {
-      extendStatics =
-        Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array &&
-          function(d, b) {
-            d.__proto__ = b;
-          }) ||
-        function(d, b) {
-          for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        };
-      return extendStatics(d, b);
-    };
-    return function(d, b) {
-      extendStatics(d, b);
-      function __() {
-        this.constructor = d;
-      }
-      d.prototype =
-        b === null
-          ? Object.create(b)
-          : ((__.prototype = b.prototype), new __());
-    };
-  })();
 var __spreadArrays =
   (this && this.__spreadArrays) ||
   function() {
@@ -37,31 +11,6 @@ var __spreadArrays =
 import * as React from "react";
 import { hybridModule } from "./angularjs/module";
 import { ReactViewConfig } from "@uirouter/react";
-/**
- * Registers a `react` view config factory which is invoked when `view.$type === 'react'`.
- *
- * Decorates the `views: {}` registered on states.
- * Detects if a `component:` is a React Component and sets `view.$type = 'react'` if so
- */
-var wrapperFactory = function(view, cmp, originalType, originalComponent) {
-  return /** @class */ (function(_super) {
-    __extends(WrapperComponent, _super);
-    function WrapperComponent() {
-      return (_super !== null && _super.apply(this, arguments)) || this;
-    }
-    WrapperComponent.prototype.componentWillUnmount = function() {
-      if (view) {
-        // Revert back to original, unmodified type & component after this wrapper unmounts.
-        view.$type = originalType;
-        view.component = originalComponent;
-      }
-    };
-    WrapperComponent.prototype.render = function() {
-      return React.createElement(cmp, this.props, this.props.children);
-    };
-    return WrapperComponent;
-  })(React.Component);
-};
 hybridModule.config([
   "$uiRouterProvider",
   function(router) {
@@ -92,6 +41,33 @@ hybridModule.config([
           var injectables = __spreadArrays(view.componentProvider);
           // Remove the runner function, and just leave `injectables` with deps.
           var func_1 = injectables.pop();
+          var originalType_1 = view.$type;
+          var originalComponent_1 = view.component;
+          var originalExit = view.$context.onExit;
+          // Once the view exits, reset the view type, so `componentProvider` runs again.
+          if (!originalExit || !originalExit.$$__ui_router_react_view_fixer) {
+            var originalExitDeps = __spreadArrays(originalExit || []);
+            var originalExitFn_1 = originalExitDeps.pop();
+            view.$context.onExit = __spreadArrays(originalExitDeps, [
+              function() {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                  args[_i] = arguments[_i];
+                }
+                if (view.$type !== originalType_1) {
+                  view.$type = originalType_1;
+                }
+                if (view.component !== originalComponent_1) {
+                  view.component = originalComponent_1;
+                }
+                if (typeof originalExitFn_1 === "function") {
+                  return originalExitFn_1.apply(void 0, args);
+                }
+              }
+            ]);
+            // Only decorate the onExit once per state declaration.
+            view.$context.onExit.$$__ui_router_react_view_fixer = true;
+          }
           // Create a new component provider.
           view.componentProvider = __spreadArrays(injectables, [
             function() {
@@ -103,19 +79,11 @@ hybridModule.config([
               var cmp = func_1.apply(void 0, args);
               // Determine if it's react.
               var reactType = isReactComponent(cmp) && "react";
-              // Preserve the original type & component.
-              var originalType = view.$type;
-              var originalComponent = view.component;
               view.$type = selfViews[key].$type || reactType || view.$type;
               if (view.$type === "react") {
                 // Set the component, if it's react, as `ReactViewConfig` expects the `component`
                 // property.
-                view.component = wrapperFactory(
-                  view,
-                  cmp,
-                  originalType,
-                  originalComponent
-                );
+                view.component = cmp;
               }
               // Also return component for AngularjS components.
               return cmp;
