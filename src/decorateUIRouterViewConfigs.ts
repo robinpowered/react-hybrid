@@ -41,13 +41,22 @@ hybridModule.config([
 
             view.$context.onExit = [
               ...originalExitDeps,
+              // It's fine to have multiple injectables w/ the same name.
+              '$transition$',
               function(...args) {
-                if (view.$type !== originalType) {
-                  view.$type = originalType;
-                }
+                // Get the transition injectable and leave `args` with original injectables.
+                const $transition$ = args.pop();
 
-                if (view.component !== originalComponent) {
-                  view.component = originalComponent;
+                if ($transition$.from() !== $transition$.to()) {
+                  // If we are actually changing the states.
+                  // Updating parameters should not result in us re-building the component & state.
+                  if (view.$type !== originalType) {
+                    view.$type = originalType;
+                  }
+
+                  if (view.component !== originalComponent) {
+                    view.component = originalComponent;
+                  }
                 }
 
                 if (typeof originalExitFn === 'function') {
